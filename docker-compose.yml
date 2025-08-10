@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  db:
+    image: mongo:7
+    container_name: ya-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    build: .
+    container_name: ya-api
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data  # persist outputs to your host
+
+volumes:
+  mongo_data:
